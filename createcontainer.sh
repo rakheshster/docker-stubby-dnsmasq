@@ -62,6 +62,7 @@ cat <<EOF > $NAME.service
     Restart=always
     ExecStart=/usr/bin/docker start -a $NAME
     ExecStop=/usr/bin/docker stop -t 2 $NAME
+    ExecReload=/usr/bin/docker exec $NAME s6-svc -h /var/run/s6/services/dnsmasq
 
     [Install]
     WantedBy=local.target
