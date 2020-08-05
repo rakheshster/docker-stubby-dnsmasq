@@ -35,6 +35,7 @@ if [[ -z $2 ]]; then
     IMAGE="rakheshster/docker-stubby-dnsmasq"
 fi
 
+# delete an existing image of the same name if it exists
 if [[ $(docker image ls $IMAGE) ]]; then 
     docker rmi -f $IMAGE 
 fi
