@@ -55,7 +55,6 @@ ENV S6_VERSION 2.0.0.1
 RUN apk add --update --no-cache dnsmasq ca-certificates \
     yaml libidn2 unbound-dev drill && \
     addgroup -S stubby && adduser -D -S stubby -G stubby && \
-    addgroup -S dnsmasq && adduser -D -S dnsmasq -G dnsmasq && \
     mkdir -p /var/cache/stubby && \
     chown stubby:stubby /var/cache/stubby
 
