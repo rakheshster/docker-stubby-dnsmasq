@@ -35,6 +35,10 @@ if [[ -z $2 ]]; then
     IMAGE="rakheshster/docker-stubby-dnsmasq"
 fi
 
+if [[ $(docker image ls $IMAGE) ]]; then 
+    docker rmi -f $IMAGE 
+fi
+
 # loop through the array and create them all
 for A in ${ARCH[@]}; do
     echo "Building ${IMAGE}:${A}"
