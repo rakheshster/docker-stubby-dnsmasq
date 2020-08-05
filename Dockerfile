@@ -53,8 +53,7 @@ ENV S6_VERSION 2.0.0.1
 # Also create a user and group to run stubby as (thanks to https://stackoverflow.com/a/49955098 for syntax)
 # addgroup / adduser -S creates a system group / user; the -D says don't assign a password
 RUN apk add --update --no-cache dnsmasq ca-certificates \
-    yaml libidn2 \
-    drill && \
+    yaml libidn2 unbound-dev drill && \
     addgroup -S stubby && adduser -D -S stubby -G stubby && \
     addgroup -S dnsmasq && adduser -D -S dnsmasq -G dnsmasq && \
     mkdir -p /var/cache/stubby && \
