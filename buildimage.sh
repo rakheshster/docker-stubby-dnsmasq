@@ -47,4 +47,5 @@ for A in ${ARCH[@]}; do
 done
 
 # prune the intermediate images
+# skip this for now as I want to keep them around to improve build times ...
 # docker image prune --filter label=stage=alpinebuild -f
