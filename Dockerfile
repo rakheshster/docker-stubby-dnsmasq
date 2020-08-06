@@ -43,7 +43,7 @@ RUN cmake -DBUILD_STUBBY=ON -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. && \
 
 ################################### DNSMASQ ####################################
 # This image is to only install dnsmasq. I can reuse this image later without have to rebuild the whole image for any small changes. 
-# Basically I am doing a multistage build. :) https://docs.docker.com/develop/develop-images/multistage-build/
+# Basically I am doing a multistage build. https://docs.docker.com/develop/develop-images/multistage-build/
 FROM alpine:latest AS alpinednsmasq
 
 LABEL stage="alpinednsmasq"
@@ -60,10 +60,11 @@ RUN apk add --update --no-cache dnsmasq ca-certificates \
 
 
 ################################### S6 & FINALIZE ####################################
-# This pulls in unbound & stubby, adds s6 and copies some files over
+# This pulls in dnsmasq & Stubby, adds s6 and copies some files over
+# Create a new image based on alpinednsmasq ...
 FROM alpinednsmasq 
 
-# Copy the files from the above image to the new image (so /usr/local/bin -> /bin etc.)
+# ... and copy the files from the alpinestubby image to the new image (so /usr/local/bin -> /bin etc.)
 COPY --from=alpinestubby /usr/local/ /
 
 # I take the arch (for s6) as an argument. Options are amd64, x86, armhf (for Pi), arm, aarch64. See https://github.com/just-containers/s6-overlay#releases
