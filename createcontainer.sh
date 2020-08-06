@@ -35,14 +35,14 @@ if [[ -z "$3" ]]; then
         -P --network="$NETWORK" \
         --restart=unless-stopped \
         --cap-add=NET_ADMIN \
-        --mount type=bind,source=$(pwd)/etc/dnsmasq.d,target=/etc/dnsmasq.d \
+        --mount type=bind,source=$(pwd)/root/etc/dnsmasq.d,target=/etc/dnsmasq.d \
         "$IMAGE"
 else
     docker create --name "$NAME" \
         -P --network="$NETWORK" --ip=$IP \
         --restart=unless-stopped \
         --cap-add=NET_ADMIN \
-        --mount type=bind,source=$(pwd)/etc/dnsmasq.d,target=/etc/dnsmasq.d \
+        --mount type=bind,source=$(pwd)/root/etc/dnsmasq.d,target=/etc/dnsmasq.d \
         "$IMAGE"
 fi
 # Note that when creating the container I map the /etc/dnsmasq.d folder into the container. 
