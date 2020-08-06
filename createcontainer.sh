@@ -46,7 +46,7 @@ else
         "$IMAGE"
 fi
 # Note that when creating the container I map the /etc/dnsmasq.d folder into the container. 
-# The image already has the contents of this folder copied over, but this way I can make any changes and restart the container or reload dnsmasq to pick up changes.
+# The image already has the contents of this folder copied over, but this way I can make any changes and restart the container to pick up changes.
 
 # quit if the above step gave any error
 [[ $? -ne 0 ]] && exit 1
