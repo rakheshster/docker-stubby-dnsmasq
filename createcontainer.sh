@@ -17,6 +17,7 @@ else
     NAME=$2
 fi
 
+# create a docker volume for storing data. this is automatically named after the container plus a suffix. 
 VOLUME=${NAME}-data
 docker volume create $VOLUME
 
@@ -65,7 +66,7 @@ cat <<EOF > $NAME.service
     After=docker.service
 
     [Service]
-    Restart=always
+    Restart=on-abort
     ExecStart=/usr/bin/docker start -a $NAME
     ExecStop=/usr/bin/docker stop -t 2 $NAME
     ExecReload=/usr/bin/docker exec $NAME s6-svc -h /var/run/s6/services/dnsmasq
