@@ -45,7 +45,7 @@ root
 ### Dnsmasq
 The `dnsmasq.d` folder is of interest if you want to tweak the Dnsmasq config or add zones etc. All it currently has is a README file and the original  `dnsmasq.conf`  zone file.  Out of the box Dnsmasq is setup to answer DNS queries by forwarding to Stubby and does not offer DHCP or any additional DNS zones. 
 
-When the image is built the contents of this folder are copied into it, but during runtime a new docker volume and mapped to this location *within the container*. Since the new docker volume is empty upon creation, the first time the container is run the contents of `/etc/dnsmasq.d` are copied from the container to this volume. If you then make any changes to this folder from within the container it will be stored in the docker volume.
+When the image is built the contents of this folder are copied into it at `/etc/dnsmasq.d`, but during runtime a new docker volume and mapped to this location *within the container*. Since the new docker volume is empty upon creation, the first time the container is run the contents of `/etc/dnsmasq.d` are copied from the container to this volume. If you then make any changes to this folder from within the container it will be stored in the docker volume.
 
 Dnsmasq is set to pull in any files ending with `*.conf` from this folder into the running config.
 
@@ -65,23 +65,11 @@ docker exec pi1_docker-stubby-dnsmasq dnsmasq-reload
 ```
 
 ### Stubby
-Stubby doesn’t need any configuring but it would be a good idea to change the upstream DNS servers after downloading this repo and before building the image. The `root/etc/stubby/stubby.yml` has this section with my preferred upstream servers:
+Stubby doesn't need any configuring but it would be a good idea to change the upstream DNS servers after downloading this repo and before building the image. 
 
-```yaml
-########################## [THIS NEEDS CHANGING]  ##############################
-# These are the NextDNS servers with my configuration. Please modify or use one of the commented upstreams below. 
+When the image is built the `stubby` folder is copied into it at `/etc/stubby`, but during runtime a new docker volume is created and mapped to this location within the container (similar to what I do above). Since this volume is empty the first time, the contents of `/etc/stubby` are copied over to this docker volume but any subsequent changes its contents are stored in the docker volume. 
 
-upstream_recursive_servers:
-  - address_data: 45.90.28.0
-    tls_auth_name: “acfd47.dns1.nextdns.io”
-  - address_data: 2a07:a8c0::0
-    tls_auth_name: “acfd47.dns1.nextdns.io”
-  - address_data: 45.90.30.0
-    tls_auth_name: “acfd47.dns2.nextdns.io”
-  - address_data: 2a07:a8c1::0
-    tls_auth_name: “acfd47.dns2.nextdns.io”
-########################## [THIS NEEDS CHANGING]  ##############################
-```
+You can edit the config file or copy from outside the container using similar commands as above. 
 
 ## Building & Running
 The quickest way to get started after cloning/ downloading this repo is to use the `./buildimage.sh` file. It takes two arguments - the architecture you are building for, and the name you want to give the image (this is optional, defaults to `rakheshster/docker-stubby-dnsmasq`). The architecture matters because the s6 binaries are per architecture.

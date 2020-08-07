@@ -18,8 +18,8 @@ else
 fi
 
 # create a docker volume for storing data. this is automatically named after the container plus a suffix. 
-VOLUME=${NAME}-data
-docker volume create $VOLUME
+UNBOUND_DATA=${NAME}-dnsmasq && docker volume create $DNSMASQ_DATA
+STUBBY_DATA=${NAME}-stubby && docker volume create $STUBBY_DATA
 
 if [[ -z "$4" ]]; then 
     # network name not specified, default to bridge
@@ -39,19 +39,22 @@ if [[ -z "$3" ]]; then
         -P --network="$NETWORK" \
         --restart=unless-stopped \
         --cap-add=NET_ADMIN \
-        --mount type=volume,source=$VOLUME,target=/etc/dnsmasq.d \
+        --mount type=volume,source=$DNSMASQ_DATA,target=/etc/dnsmasq.d \
+        --mount type=volume,source=$STUBBY_DATA,target=/etc/stubby \
         "$IMAGE"
 else
     docker create --name "$NAME" \
         -P --network="$NETWORK" --ip=$IP \
         --restart=unless-stopped \
         --cap-add=NET_ADMIN \
-        --mount type=volume,source=$VOLUME,target=/etc/dnsmasq.d \
+        --mount type=volume,source=$DNSMASQ_DATA,target=/etc/dnsmasq.d \
+        --mount type=volume,source=$STUBBY_DATA,target=/etc/stubby \
         "$IMAGE"
 fi
 # Note that the container already has a /etc/dnsmasq.d folder which contains files copied in during the image build.
 # When I create the docker volume above and map it to the container, if this volume is empty the files from within the container are copied over to it.
 # Subsequently the files from the volume are used in preference to the files in the image. 
+# Ditto for /etc/stubby. 
 
 # quit if the above step gave any error
 [[ $? -ne 0 ]] && exit 1
