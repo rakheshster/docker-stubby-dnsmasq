@@ -51,23 +51,23 @@ Dnsmasq is set to pull in any files ending with `*.conf` from this folder into t
 
 You can edit the file via `docker exec` like thus:
 ```
-docker exec -it pi1_docker-stubby-dnsmasq vi /etc/dnsmasq.d/somefile.conf
+docker exec -it stubby-dnsmasq vi /etc/dnsmasq.d/somefile.conf
 ```
 
 Or you copy a file from outside the container to it:
 ```
-docker cp somefile.conf pi1_docker-stubby-dnsmasq:/etc/dnsmasq.d/
+docker cp somefile.conf stubby-dnsmasq:/etc/dnsmasq.d/
 ```
 
 After making changes reload unload so it pulls in this config. The `/usr/sbin/dnsmasq-reload` script does that. Run it thus:
 ```
-docker exec pi1_docker-stubby-dnsmasq dnsmasq-reload
+docker exec stubby-dnsmasq dnsmasq-reload
 ```
 
 ### Stubby
 Stubby doesn't need any configuring but it would be a good idea to change the upstream DNS servers after downloading this repo and before building the image. 
 
-When the image is built the `stubby` folder is copied into it at `/etc/stubby`, but during runtime a new docker volume is created and mapped to this location within the container (similar to what I do above). Since this volume is empty the first time, the contents of `/etc/stubby` are copied over to this docker volume but any subsequent changes its contents are stored in the docker volume. 
+When the image is built the `stubby` folder is copied into it as `/etc/stubby`, but during runtime a new docker volume is created and mapped to this location within the container (similar to what I do above). Since this volume is empty the first time, the contents of `/etc/stubby` are copied over to this docker volume but any subsequent changes its contents are stored in the docker volume. 
 
 You can edit the config file or copy from outside the container using similar commands as above. 
 
@@ -84,4 +84,8 @@ The `./createcontainer.sh` script doesn’t run the container. It creates the co
 Note: The service unit file is set to only restart if the service is aborted. This is intentional in case you want to `docker stop` the container sometime.
 
 ## Notes
-This is my second Docker image. I have a similar [Stubby + Unbound](https://github.com/rakheshster/docker-stubby-unbound) image. While creating this Stubby + Dnsmasq image I spent some time setting up multistage builds and thinking about how to store data. Again, nothing fancy but all of this was a learning experience for me so I am quite pleased. These learnings are now incorporated in the [Stubby + Unbound](https://github.com/rakheshster/docker-stubby-unbound) image too. 
+This is my second Docker image. If it's of interest, I have a similar [Stubby + Unbound](https://github.com/rakheshster/docker-stubby-unbound) image. 
+
+While creating this Stubby + Dnsmasq image I spent some time setting up multistage builds and thinking about how to store data. Again, nothing fancy but all of this was a learning experience for me so I am quite pleased. These learnings are now incorporated in the [Stubby + Unbound](https://github.com/rakheshster/docker-stubby-unbound) image too. 
+
+I have since updated both images with other things I've picked up (e.g. multi-arch builds). 
