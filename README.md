@@ -1,4 +1,19 @@
 # Stubby + Dnsmasq + Docker
+## First things first
+It is best to target a specific release when pulling this repo. Either switch to the correct tag after downloading, or download a zip of the latest release from the [Releases](https://github.com/rakheshster/docker-stubby-dnsmasq/releases) page. 
+
+We are currently at v0.2.0 and contain the following:
+  * Alpine 3.12 & s6-overlay 2.0.0.1 (via my [alpine-s6](https://hub.docker.com/repository/docker/rakheshster/alpine-s6) image)
+  * Stubby 0.3.0 & GetDNS 1.6.0
+  * Dnsmasq (the latest version in Alpine repos)
+
+I had a v0.1 pushed to GitHub before I started thinking about how to properly version these. In the vein of [Semantic Versioning](https://semver.org) the version numbers starting with v0.2.0 of this image is in a MAJOR.MINOR.PATCH format and currently at the number above. 
+
+  * I will update PATCH when I make any changes to the Dockerfile or config files etc. These will be minor behind the scene changes introduced by me. 
+  * I will update MINOR in case of any minor updates to any of the software above. For example: Stubby 0.3.1 will be a minor update. 
+  * And I will update MAJOR in case of major updates to any of the software above. For example: Stubby 0.4 or Alpine 3.xx would be a major update. 
+
+
 ## What is this?
 This is a Docker image containing Stubby and Dnsmasq.
 
@@ -9,7 +24,7 @@ As of version 0.3 Stubby also supports DNS-over-HTTPs. This Docker image contain
 
 Dnsmasq is a lightweight and small footprint DHCP and DNS server. You can read more about it on its [documentation](http://www.thekelleys.org.uk/dnsmasq/doc.html) page. Dnsmasq can answer DNS queries from a local file as well as forward to an upstream server. 
 
-This Stubby + Dnsmasq Docker image packages the two together. It sets up Stubby listening on port 8053 with Dnsmasq listening on port 53 and forwarding to Stubby port 8053. I use NextDNS, so the Stubby config points to NextDNS currently but you can change it (_and should do so as it currently uses my configuration ID_).
+This Stubby + Dnsmasq Docker image packages the two together. It sets up Stubby listening on port 8053 with Dnsmasq listening on port 53 and forwarding to Stubby port 8053.
 
 ## s6-overlay
 I also took the opportunity to setup an [s6-overlay](https://github.com/just-containers/s6-overlay). I like their philosophy of a Docker container being “one thing” rather than “one process per container”. This is why I chose to create one image for both Stubby & Docker instead of separate images. It was surprisingly easy to setup.
@@ -45,7 +60,7 @@ root
 ### Dnsmasq
 The `dnsmasq.d` folder is of interest if you want to tweak the Dnsmasq config or add zones etc. All it currently has is a README file and the original  `dnsmasq.conf`  zone file.  Out of the box Dnsmasq is setup to answer DNS queries by forwarding to Stubby and does not offer DHCP or any additional DNS zones. 
 
-When the image is built the contents of this folder are copied into it at `/etc/dnsmasq.d`, but during runtime a new docker volume and mapped to this location *within the container*. Since the new docker volume is empty upon creation, the first time the container is run the contents of `/etc/dnsmasq.d` are copied from the container to this volume. If you then make any changes to this folder from within the container it will be stored in the docker volume.
+When the image is built the contents of this folder are copied into it as `/etc/dnsmasq.d`, but during runtime a new docker volume and mapped to this location *within the container*. Since the new docker volume is empty upon creation, the first time the container is run the contents of `/etc/dnsmasq.d` are copied from the container to this volume. If you then make any changes to this folder from within the container it will be stored in the docker volume.
 
 Dnsmasq is set to pull in any files ending with `*.conf` from this folder into the running config.
 
@@ -72,11 +87,11 @@ When the image is built the `stubby` folder is copied into it as `/etc/stubby`, 
 You can edit the config file or copy from outside the container using similar commands as above. 
 
 ## Building & Running
-The quickest way to get started after cloning/ downloading this repo is to use the `./buildimage.sh` file. It takes two arguments - the architecture you are building for, and the name you want to give the image (this is optional, defaults to `rakheshster/docker-stubby-dnsmasq`). The architecture matters because the s6 binaries are per architecture.
+The quickest way to get started after cloning/ downloading this repo is to use the `./buildlocal.sh` file. It takes a single optional argument - the name you want to give the image (defaults to `rakheshster/stubby-unbound`).
 
-This script builds the image, which involves compiling the stubby sources and installing the dnsmasq package… all of it on an Alpine Linux base with a topping of s6-overlay. There’s probably fancier ways of doing this than a shell script, but this is what suited me. You could skip the script and do a `docker build` too -  the script is just a wrapper to run this command with some checks of the architecture and cleaning up of the intermediate images.
+NOTE: the script is optional. You can build this via `docker build` too. And additional script `./buildandpush.sh` is what I use to create multi-arch images and push to Docker Hub. It too is optional. 
 
-After the image is built you can run it manually via `docker run` or you use the `./createcontainer.sh` script which takes the image name and container name as mandatory parameters and optionally the IP address and network of the container. I tend to use a macvlan network to run this so the container has its own IP address on my network.
+After the image is built you can run it manually via `docker run` or you use the `./createcontainer.sh` script which takes the image name and container name as mandatory parameters and optionally the IP address and network of the container. I tend to use a macvlan network to run this so the container has its own IP address on my network. 
 
 ### Systemd integration
 The `./createcontainer.sh` script doesn’t run the container. It creates the container and also creates a systemd service unit file along with some instructions on what to do with it. This way you have systemd managing the container so it always starts after a system reboot. The unit file and systemd integration is optional of course; I wanted the container to always start after a reboot as it provides DNS for my home lab and is critical, that’s why I went through this extra effort.
