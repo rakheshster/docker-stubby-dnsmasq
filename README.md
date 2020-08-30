@@ -1,4 +1,5 @@
 # Stubby + Dnsmasq + Docker
+![Buildx & Push to DockerHub](https://github.com/rakheshster/docker-stubby-dnsmasq/workflows/Buildx%20&%20Push%20to%20DockerHub/badge.svg)
 
 ## What is this?
 This is a Docker image containing Stubby and Dnsmasq.
