@@ -1,18 +1,4 @@
 # Stubby + Dnsmasq + Docker
-## First things first
-It is best to target a specific release when pulling this repo. Either switch to the correct tag after downloading, or download a zip of the latest release from the [Releases](https://github.com/rakheshster/docker-stubby-dnsmasq/releases) page. 
-
-We are currently at v0.2.0 and contain the following:
-  * Alpine 3.12 & s6-overlay 2.0.0.1 (via my [alpine-s6](https://hub.docker.com/repository/docker/rakheshster/alpine-s6) image)
-  * Stubby 0.3.0 & GetDNS 1.6.0
-  * Dnsmasq (the latest version in Alpine repos)
-
-I had a v0.1 pushed to GitHub before I started thinking about how to properly version these. In the vein of [Semantic Versioning](https://semver.org) the version numbers starting with v0.2.0 of this image is in a MAJOR.MINOR.PATCH format and currently at the number above. 
-
-  * I will update PATCH when I make any changes to the Dockerfile or config files etc. These will be minor behind the scene changes introduced by me. 
-  * I will update MINOR in case of any minor updates to any of the software above. For example: Stubby 0.3.1 will be a minor update. 
-  * And I will update MAJOR in case of major updates to any of the software above. For example: Stubby 0.4 or Alpine 3.xx would be a major update. 
-
 
 ## What is this?
 This is a Docker image containing Stubby and Dnsmasq.
@@ -25,6 +11,20 @@ As of version 0.3 Stubby also supports DNS-over-HTTPs. This Docker image contain
 Dnsmasq is a lightweight and small footprint DHCP and DNS server. You can read more about it on its [documentation](http://www.thekelleys.org.uk/dnsmasq/doc.html) page. Dnsmasq can answer DNS queries from a local file as well as forward to an upstream server. 
 
 This Stubby + Dnsmasq Docker image packages the two together. It sets up Stubby listening on port 8053 with Dnsmasq listening on port 53 and forwarding to Stubby port 8053.
+
+## Getting this
+It is best to target a specific release when pulling this repo. Either switch to the correct tag after downloading, or download a zip of the latest release from the [Releases](https://github.com/rakheshster/docker-stubby-dnsmasq/releases) page. 
+
+We are currently at "0.3.0-1" and contain the following:
+  * Alpine 3.12 & s6-overlay 2.0.0.1 (via my [alpine-s6](https://hub.docker.com/repository/docker/rakheshster/alpine-s6) image)
+  * Stubby 0.3.0 & GetDNS 1.6.0
+  * Dnsmasq (the latest version in Alpine repos)
+
+I had a v0.1 pushed to GitHub before I started thinking about how to properly version these. Then I thought I'd do [Semantic Versioning](https://semver.org) and started doing version numbers starting with v0.2.0 of this image in a MAJOR.MINOR.PATCH format. Later I decided to make the version more explicit about the version of software it contains. Hence I will switch to version numbers of format `<stubby version>-<patch>` where `<patch>` will be increments due to changes introduced by me (maybe a change to the Dockerfile or underlying Alpine/ s6 base). 
+
+NOTE: I know I should target specific versions of Dnsmasq rather than let it follow whatever is in the Alpine repos. I got side tracked with other projects so didn't spend time sorting this out. 
+
+You can download this from Docker Hub as [rakheshster/stubby-dnsmasq:version](https://hub.docker.com/repository/docker/rakheshster/stubby-dnsmasq). 
 
 ## s6-overlay
 I also took the opportunity to setup an [s6-overlay](https://github.com/just-containers/s6-overlay). I like their philosophy of a Docker container being “one thing” rather than “one process per container”. This is why I chose to create one image for both Stubby & Docker instead of separate images. It was surprisingly easy to setup.
@@ -104,3 +104,5 @@ This is my second Docker image. If it's of interest, I have a similar [Stubby + 
 While creating this Stubby + Dnsmasq image I spent some time setting up multistage builds and thinking about how to store data. Again, nothing fancy but all of this was a learning experience for me so I am quite pleased. These learnings are now incorporated in the [Stubby + Unbound](https://github.com/rakheshster/docker-stubby-unbound) image too. 
 
 I have since updated both images with other things I've picked up (e.g. multi-arch builds). 
+
+As noted earlier I know I should target specific versions of Dnsmasq rather than let it follow whatever is in the Alpine repos. I got side tracked with other projects so didn't spend time sorting this out. 
