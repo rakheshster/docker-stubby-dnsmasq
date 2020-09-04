@@ -58,7 +58,7 @@ LABEL maintainer="Rakhesh Sasidharan"
 # Install dnsmasq (first line) and run-time dependencies for Stubby (I found these by running stubby and what it complained about)
 # Also create a user and group to run stubby as (thanks to https://stackoverflow.com/a/49955098 for syntax)
 # addgroup / adduser -S creates a system group / user; the -D says don't assign a password
-RUN apk add --update --no-cache dnsmasq ca-certificates \
+RUN apk add --update --no-cache dnsmasq ca-certificates tzdata \
     yaml libidn2 unbound-dev drill
 RUN rm -rf /var/cache/apk/*
 RUN addgroup -S stubby && adduser -D -S stubby -G stubby

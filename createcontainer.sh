@@ -37,6 +37,7 @@ IP=$3
 if [[ -z "$3" ]]; then
     docker create --name "$NAME" \
         -P --network="$NETWORK" \
+        -e TZ="Europe/London" \
         --restart=unless-stopped \
         --cap-add=NET_ADMIN \
         --mount type=volume,source=$DNSMASQ_DATA,target=/etc/dnsmasq.d \
@@ -45,6 +46,7 @@ if [[ -z "$3" ]]; then
 else
     docker create --name "$NAME" \
         -P --network="$NETWORK" --ip=$IP \
+        -e TZ="Europe/London" \
         --restart=unless-stopped \
         --cap-add=NET_ADMIN \
         --mount type=volume,source=$DNSMASQ_DATA,target=/etc/dnsmasq.d \
