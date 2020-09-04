@@ -59,7 +59,7 @@ LABEL maintainer="Rakhesh Sasidharan"
 # Also create a user and group to run stubby as (thanks to https://stackoverflow.com/a/49955098 for syntax)
 # addgroup / adduser -S creates a system group / user; the -D says don't assign a password
 RUN apk add --update --no-cache dnsmasq ca-certificates tzdata \
-    yaml libidn2 unbound-dev drill
+    yaml libidn2 unbound-dev drill nano
 RUN rm -rf /var/cache/apk/*
 RUN addgroup -S stubby && adduser -D -S stubby -G stubby
 RUN mkdir -p /var/cache/stubby
