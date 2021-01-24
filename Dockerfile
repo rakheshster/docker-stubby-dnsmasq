@@ -32,7 +32,7 @@ RUN rm -rf /var/cache/apk/*
 ADD https://getdnsapi.net/dist/getdns-${GETDNS_VERSION}.tar.gz /tmp/
 ADD https://getdnsapi.net/dist/getdns-${GETDNS_VERSION}.tar.gz.asc /tmp/
 # Import GetDNS's key (Willem Toorop <willem@nlnetlabs.nl>)
-RUN wget -qO - 'https://keys.openpgp.org/pks/lookup?op=get&search=0xE5F8F8212F77A498' | gpg --import
+RUN gpg --recv-keys 0xE5F8F8212F77A498
 # Verify the download (exit if it fails)
 RUN gpg --status-fd 1 --verify /tmp/getdns-${GETDNS_VERSION}.tar.gz.asc /tmp/getdns-${GETDNS_VERSION}.tar.gz 2>/dev/null | grep -q "GOODSIG E5F8F8212F77A498" \
     || exit 1
