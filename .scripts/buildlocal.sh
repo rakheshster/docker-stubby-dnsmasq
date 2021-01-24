@@ -15,9 +15,4 @@ if [[ $(docker image inspect ${IMAGENAME} 2>/dev/null) == "" ]]; then
     docker rmi -f ${IMAGENAME}:${VERSION}
 fi
 
-docker build . -t ${IMAGENAME}:${VERSION}
-
-# prune the intermediate images
-# skip this for now as I want to keep them around to improve build times ...
-# docker image prune --filter label=stage=alpinestubby -f
-# docker image prune --filter label=stage=alpineunbound -f
+docker build -t ${IMAGENAME}:${VERSION} -t ${IMAGENAME}:latest .

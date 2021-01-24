@@ -81,22 +81,20 @@ When the image is built the `stubby` folder is copied into it as `/etc/stubby`, 
 You can edit the config file or copy from outside the container using similar commands as above. 
 
 ## Building & Running
-The quickest way to get started after cloning/ downloading this repo is to use the `./buildlocal.sh` file. It takes a single optional argument - the name you want to give the image (defaults to `rakheshster/stubby-unbound`).
+The quickest way to get started after cloning/ downloading this repo is to use the `./.scripts/buildlocal.sh` file. It takes the name and tag to assign the image from the `buildinfo.json` file.
 
-NOTE: the script is optional. You can build this via `docker build` too. And additional script `./buildandpush.sh` is what I use to create multi-arch images and push to Docker Hub. It too is optional. 
+NOTE: the script is optional. You can build this via `docker build` too. And additional script `./.scripts/buildxandpush.sh` is what I use to create multi-arch images and push to Docker Hub. It too is optional. 
 
-After the image is built you can run it manually via `docker run` or you use the `./createcontainer.sh` script which takes the image name and container name as mandatory parameters and optionally the IP address and network of the container. I tend to use a macvlan network to run this so the container has its own IP address on my network. 
+After the image is built you can run it manually via `docker run` or you use the `./.scripts/createcontainer.sh` script which takes the image name and container name as mandatory parameters and optionally the IP address and network of the container. I tend to use a macvlan network to run this so the container has its own IP address on my network. 
 
 ### Systemd integration
-The `./createcontainer.sh` script doesn’t run the container. It creates the container and also creates a systemd service unit file along with some instructions on what to do with it. This way you have systemd managing the container so it always starts after a system reboot. The unit file and systemd integration is optional of course; I wanted the container to always start after a reboot as it provides DNS for my home lab and is critical, that’s why I went through this extra effort.
+The `./.scripts/createcontainer.sh` script doesn’t run the container. It creates the container and also creates a systemd service unit file along with some instructions on what to do with it. This way you have systemd managing the container so it always starts after a system reboot. The unit file and systemd integration is optional of course; I wanted the container to always start after a reboot as it provides DNS for my home lab and is critical, that’s why I went through this extra effort.
 
 Note: The service unit file is set to only restart if the service is aborted. This is intentional in case you want to `docker stop` the container sometime.
 
 ## Notes
-This is my second Docker image. If it's of interest, I have a similar [Stubby + Unbound](https://github.com/rakheshster/docker-stubby-unbound) image. 
+This was my second Docker image. It has changed substantially since the initial days as I learnt more from building other images and tried to keep things common across all my images. I have a similar [Stubby + Unbound](https://github.com/rakheshster/docker-stubby-unbound) image. 
 
 While creating this Stubby + Dnsmasq image I spent some time setting up multistage builds and thinking about how to store data. Again, nothing fancy but all of this was a learning experience for me so I am quite pleased. These learnings are now incorporated in the [Stubby + Unbound](https://github.com/rakheshster/docker-stubby-unbound) image too. 
-
-I have since updated both images with other things I've picked up (e.g. multi-arch builds). 
 
 As noted earlier I know I should target specific versions of Dnsmasq rather than let it follow whatever is in the Alpine repos. I got side tracked with other projects so didn't spend time sorting this out. 
