@@ -53,6 +53,7 @@ FROM mybase AS finalstage
 
 LABEL stage="finalstage"
 LABEL maintainer="Rakhesh Sasidharan"
+LABEL org.opencontainers.image.source=https://github.com/rakheshster/docker-stubby-unbound
 
 # Install dnsmasq (first line) and run-time dependencies for Stubby (I found these by running stubby and what it complained about)
 # Also create a user and group to run stubby as (thanks to https://stackoverflow.com/a/49955098 for syntax)
